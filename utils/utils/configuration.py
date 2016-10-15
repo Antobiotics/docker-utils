@@ -5,7 +5,8 @@ class Configuration(object):
         self.read_config(cfg)
 
     def read_config(self, cfg):
-        with open(cfg) as cfg_file:
+        print cfg
+        with open(cfg, 'r') as cfg_file:
             self.config = json.load(cfg_file)
 
     def get_config(self):

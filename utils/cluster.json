@@ -4,11 +4,11 @@
         "region": "us-east-1",
         "credentials_file": "/Users/gregoirelejay/.aws/credentials",
         "profile": "default",
-        "vpc_id": "vpc-fa8b4e9f",
+        "vpc_id": "vpc-fa8b4e9f"
     },
     "members": [
         {
-            "name": "key-store",
+            "name": "keyStore",
             "instance_type": "t2.nano",
             "role": "key-store"
         },
@@ -16,14 +16,14 @@
             "name": "swarm-master",
             "instance_type": "t2.nano",
             "role": "swarm-master",
-            "is_master": true,
+            "is_master": true
         },
         {
             "name": "dbs",
             "intance_type": "t2.nano",
             "role": "storage",
             "is_master": "false",
-            "root-size": 20,
+            "root-size": 20
         }
     ]
 }

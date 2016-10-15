@@ -16,7 +16,7 @@ class AWSInstance(AWS):
 
     @property
     def name(self):
-        return self.description['name']
+        return self.cluster_prefix + '-' + self.description['name']
 
     @property
     def instance_type(self):
@@ -68,8 +68,8 @@ class AWSInstance(AWS):
     def instance_options(self):
         options = [
             '--amazonec2-instance-type={instance_type}',
-            '--engine-label role=${role}',
-            '--amazonec2-root-size ${storage}'
+            '--engine-label role={role}',
+            '--amazonec2-root-size {storage}'
         ]
         return (
             ' '.join(options)
@@ -102,8 +102,10 @@ class AWSInstance(AWS):
         }
 
     def build(self):
-        for i in self.num_instances:
-            name = self.name + '-' + str(i)
+        for i in range(self.num_instances):
+            name = self.name
+            if self.num_instances != 1:
+                name = self.name + '-' + str(i)
             if self.reset and self.exists():
                 res = self.remove()
                 if not res:
@@ -135,7 +137,7 @@ class AWSGenericInstance(AWSInstance):
             ' '.join(options)
             .format(instance_type=self.instance_type)
         )
-        #self.create(options_string)
+        self.create(options_string)
 
     def finalise(self, name):
         pass
@@ -158,7 +160,7 @@ class KeyStore(AWSGenericInstance):
 class SwarmNode(AWSGenericInstance):
     def get_key_store(self):
         key_store_desc = (
-            self.get_instance_ip_descs(self.cluster_prefix + '-key-store')
+            self.get_instance_ip_descs('key-store')
         )
         if len(key_store_desc) != 1:
             raise RuntimeError("""
@@ -192,7 +194,7 @@ class SwarmNode(AWSGenericInstance):
     def bootstrap(self, name):
         options = self.bootstrap_options.append(name)
         options_string = ' '.join(options)
-        #self.create(options_string)
+        self.create(options_string)
 
 class SwarmMaster(SwarmNode):
     @property

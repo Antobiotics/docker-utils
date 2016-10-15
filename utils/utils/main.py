@@ -31,7 +31,7 @@ def bootstrap_member(desc):
     return instance_class(desc).build()
 
 @click.group()
-@click.option('--cfg', default='cluster.json')
+@click.option('--cfg', default='./cluster.json')
 def main(**kwargs):
     set_configuration(kwargs['cfg'])
 
@@ -60,7 +60,7 @@ def bootstrap(instances, reset, steps):
 @click.argument('name')
 @click.option('--pretty', is_flag=True)
 def describe(name, pretty):
-    descriptor = aws.AWS().get_instance_ip_desc(name)
+    descriptor = aws.AWS().get_instance_ip_descs(name)
     if pretty:
         l.INFO(pretty_json(descriptor))
     else:

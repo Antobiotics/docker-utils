@@ -24,7 +24,7 @@ class AWS(object):
 
     @property
     def credentials(self):
-        return g_conf.CONFIG.get_aws('credentials')
+        return g_conf.CONFIG.get_aws('credentials_file')
 
     @property
     def region(self):
@@ -88,6 +88,7 @@ class AWS(object):
     def get_instance_ip_descs(self, name):
         found_instances = self.get_instances_containing(name)
         return [{
+            'name': instance['KeyName'],
             'private': {
                 "dns_name": instance['PrivateDnsName'],
                 "ip": instance['PrivateIpAddress'],
