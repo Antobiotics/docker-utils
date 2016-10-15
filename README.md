@@ -2,7 +2,7 @@
 
 Selfish-ware.
 One day and a bottle of wine project.
-Docker swarm and AWS helpers.
+Docker swarm and AWS helpers. The whole thing is an organised hack.
 
 - Useless for 99.99999% of the people.
 - I was sick of struggling with docker for every project I'm starting and I can't remember shit.
