@@ -67,18 +67,21 @@ class AWS(object):
                 instances = reservation['Instances']
                 for instance in instances:
                     key_name = instance['KeyName']
-                    if test_func(key_name, name):
+                    state = instance['State']['Name']
+                    if test_func(key_name, name) and state == 'running':
                         found_instances.append(instance)
             except KeyError:
                 raise RuntimeError('No instances for %s' %(name))
-        if found_instances == []:
-            raise RuntimeError("Not instance matching %s" %(name))
         return found_instances
 
     def get_instance(self, name):
         def is_equal(key_name, name):
             return key_name == name
-        return self.get_instances_matching(name, is_equal)[0]
+        matches = self.get_instances_matching(name, is_equal)
+        if len(matches) > 0:
+            return matches[0]
+        return matches
+
 
     def get_instances_containing(self, prefix):
         def contains(key_name, name):

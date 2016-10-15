@@ -29,7 +29,7 @@ class AWSInstance(AWS):
 
     @property
     def is_master(self):
-        return self.description.get('is_master', False)
+        return False
 
     @property
     def root_size(self):
@@ -80,7 +80,7 @@ class AWSInstance(AWS):
         )
 
     def exists(self):
-        return not self.get_instance(self.name) is None
+        return self.get_instance(self.name) != []
 
     def remove(self):
         command = 'docker-machine rm %s' %(self.name)
@@ -189,7 +189,8 @@ class SwarmNode(AWSGenericInstance):
     @property
     def bootstrap_options(self):
         set_master = ''
-        if self.is_master == 'true':
+        if self.is_master:
+            l.WARN("Setting up instance as SWARM MASTER")
             set_master = '--swarm-master'
         return [self.driver_options,
                 self.instance_options,

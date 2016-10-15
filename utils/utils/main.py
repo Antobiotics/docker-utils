@@ -1,4 +1,4 @@
-import sys
+import time
 import json
 import click
 
@@ -58,6 +58,7 @@ def bootstrap(instances, reset, steps):
         member_desc['steps'] = steps.split(',')
         l.INFO("Bootstraping %s" %(member_desc))
         bootstrap_member(member_desc)
+        time.sleep(10)
 
 @main.command()
 @click.argument('name')
