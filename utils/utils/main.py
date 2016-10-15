@@ -1,16 +1,24 @@
 import click
 
+import utils.logger as l
+
+from utils.configuration import CONFIG
+
+def set_configuration(cfg_file):
+    l.INFO('With Configuration file: %s'%(cfg_file))
+    CONFIG.switch_to(cfg_file)
+
 
 @click.group()
-def run():
-    pass
+@click.option('--cfg-file', default='env.cfg')
+def main(**kwargs):
+    set_configuration(kwargs['cfg_file'])
 
 
-@run.command()
-@click.argument('name')  # add the name argument
-def hello(**kwargs):
-    print 'Hello, {0}!'.format(kwargs['name'])
+@main.command()
+def run(**kwargs):
+    print kwargs
 
 
 if __name__ == '__main__':
-    run()
+    main()

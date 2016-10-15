@@ -25,7 +25,8 @@ setup(
         "utils"
     ],
     install_requires=[
-        "click"
+        "click",
+        "coloredlogs"
     ]
 )
 
