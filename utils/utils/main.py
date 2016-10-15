@@ -1,8 +1,10 @@
+import sys
 import json
 import click
 
 import utils.logger as l
 import utils.aws as aws
+import utils.aws_instance as aws_instances
 
 from utils.configuration import CONFIG
 
@@ -11,40 +13,48 @@ def pretty_json(j):
                       indent=4, separators=(',', ': '))
 
 PREDEFINED_ROLES = {
-    'key-store': aws.KeyStore(name='key-store',
-                              instance_type='t2.nano'),
-    'swarm-master': aws.SwarmMaster(name='swarmMaster',
-                                    instance_type='t2.nano')
+    'key-store': aws_instances.KeyStore,
+    'swarm-master': aws_instances.SwarmMaster
 }
 
 def set_configuration(cfg_file):
     l.INFO('With Configuration file: %s'%(cfg_file))
-    CONFIG.switch_to(cfg_file)
+    CONFIG.read_config(cfg_file)
 
-def bootstrap_role(role, options):
-    instance = aws.AWSGenericInstance(role)
+def bootstrap_member(desc):
+    instance = aws_instances.AWSGenericInstance(desc)
+    role = desc['role']
     if role in PREDEFINED_ROLES.keys():
         instance = PREDEFINED_ROLES[role]
-    return instance.build(options)
+
+    instance_class = PREDEFINED_ROLES.get(role, instance)
+    return instance_class(desc).build()
 
 @click.group()
-@click.option('--cfg-file', default='env.cfg')
+@click.option('--cfg', default='cluster.json')
 def main(**kwargs):
-    set_configuration(kwargs['cfg_file'])
+    set_configuration(kwargs['cfg'])
 
 @main.command()
-@click.argument('role')
+@click.option('--instances', default='all',
+              help="CSV of instance names")
 @click.option('--reset', is_flag=True,
               help='Destroy the machine if already exists')
 @click.option('--steps', default='prepare,bootstrap,finalise',
               help="CSV <prepare,bootstrap,finalise>")
-def bootstrap(role, reset, steps):
-    options = {
-        'reset': reset,
-        'steps': steps.split(',')
-    }
-    l.INFO('With options: %s' %(options))
-    print bootstrap_role(role, options)
+def bootstrap(instances, reset, steps):
+    targeted_members = instances.split(',')
+    if instances == 'all':
+        targeted_members = [
+            m['name'] for m in CONFIG.get_members()
+        ]
+
+    for name in targeted_members:
+        member_desc = CONFIG.get_member(name)
+        member_desc['reset'] = reset
+        member_desc['steps'] = steps.split(',')
+        l.INFO("Bootstraping %s" %(member_desc))
+        bootstrap_member(member_desc)
 
 @main.command()
 @click.argument('name')
