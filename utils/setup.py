@@ -26,7 +26,8 @@ setup(
     ],
     install_requires=[
         "click",
-        "coloredlogs"
+        "coloredlogs",
+        "executor"
     ]
 )
 
