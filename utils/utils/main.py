@@ -32,15 +32,12 @@ def bootstrap_role(role, options):
 def main(**kwargs):
     set_configuration(kwargs['cfg_file'])
 
-
-@main.command()
-def run(**kwargs):
-    print kwargs
-
 @main.command()
 @click.argument('role')
-@click.option('--reset', is_flag=True)
-@click.option('--steps', default='prepare,bootstrap,finalise')
+@click.option('--reset', is_flag=True,
+              help='Destroy the machine if already exists')
+@click.option('--steps', default='prepare,bootstrap,finalise',
+              help="CSV <prepare,bootstrap,finalise>")
 def bootstrap(role, reset, steps):
     options = {
         'reset': reset,
