@@ -189,7 +189,7 @@ class SwarmNode(AWSGenericInstance):
     @property
     def bootstrap_options(self):
         set_master = ''
-        if self.is_master:
+        if self.is_master == 'true':
             set_master = '--swarm-master'
         return [self.driver_options,
                 self.instance_options,
