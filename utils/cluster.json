@@ -10,20 +10,23 @@
         {
             "name": "keyStore",
             "instance_type": "t2.nano",
-            "role": "key-store"
+            "role": "key-store",
+            "priority": 2000
         },
         {
             "name": "swarm-master",
             "instance_type": "t2.nano",
             "role": "swarm-master",
-            "is_master": true
+            "is_master": true,
+            "priority": 1000
         },
         {
             "name": "dbs",
             "intance_type": "t2.nano",
             "role": "storage",
             "is_master": "false",
-            "root-size": 20
+            "root-size": 20,
+            "priority": 100
         }
     ]
 }

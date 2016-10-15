@@ -2,6 +2,7 @@ from utils.aws import AWS
 from executor import execute
 
 import utils.logger as l
+from utils.configuration import CONFIG
 
 DEFAULT_STEPS = [
     'prepare',
@@ -158,9 +159,14 @@ class KeyStore(AWSGenericInstance):
         execute(' '.join(command)%(name))
 
 class SwarmNode(AWSGenericInstance):
+
+    def get_key_strore_desc(self):
+        return CONFIG.get_member_by_role('key-store')
+
     def get_key_store(self):
+        key_store_name = self.get_key_strore_desc()['name']
         key_store_desc = (
-            self.get_instance_ip_descs('key-store')
+            self.get_instance_ip_descs(key_store_name)
         )
         if len(key_store_desc) != 1:
             raise RuntimeError("""
@@ -192,7 +198,7 @@ class SwarmNode(AWSGenericInstance):
                 self.swarm_options]
 
     def bootstrap(self, name):
-        options = self.bootstrap_options.append(name)
+        options = self.bootstrap_options + [name]
         options_string = ' '.join(options)
         self.create(options_string)
 

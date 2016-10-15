@@ -22,7 +22,7 @@ def set_configuration(cfg_file):
     CONFIG.read_config(cfg_file)
 
 def bootstrap_member(desc):
-    instance = aws_instances.AWSGenericInstance(desc)
+    instance = aws_instances.SwarmNode
     role = desc['role']
     if role in PREDEFINED_ROLES.keys():
         instance = PREDEFINED_ROLES[role]
@@ -45,8 +45,11 @@ def main(**kwargs):
 def bootstrap(instances, reset, steps):
     targeted_members = instances.split(',')
     if instances == 'all':
+        targeted_members = sorted(CONFIG.get_members(),
+                                  key=lambda k: k.get('priority', 0),
+                                  reverse=True)
         targeted_members = [
-            m['name'] for m in CONFIG.get_members()
+            m['name'] for m in targeted_members
         ]
 
     for name in targeted_members:

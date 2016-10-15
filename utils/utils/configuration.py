@@ -25,4 +25,12 @@ class Configuration(object):
                 return member
         raise RuntimeError('Member not found %s' %(name))
 
+    def get_member_by_role(self, role):
+        members = self.get_members()
+        for member in members:
+            if member['role'] == role:
+                return member
+        raise RuntimeError('Member not found with role: %s' %(role))
+
+
 CONFIG = Configuration()
