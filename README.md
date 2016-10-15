@@ -1,6 +1,7 @@
 # docker-utils
 
 Selfish-ware.
+One day and a bottle of wine project.
 Docker swarm and AWS helpers.
 
 - Useless for 99.99999% of the people.
@@ -10,12 +11,26 @@ Docker swarm and AWS helpers.
 - Naive and absolutely not generic.
 
 It basically simplifies the process of using Docker Swarm and
-helpers to avoid typing long chains of arguments.
+adds helpers to avoid typing long chains of arguments.
 
-- Create a swarm master
-- Create machines with different roles and configurations
-- Force rebuild if already exist
-- SSH
-- Describe instances
-- Apply
+- Creates a key store.
+- Creates a swarm master.
+- Create machines with different roles and configurations.
+- Force rebuild if already exist.
+- Describe instances.
+
+At the moment, it is not very clever. It just automates some of painful stuffs,
+so you still need to get your hands dirty with docker first.
+
+Look at `cluster.json` to see how to configure it.
+
+Examples:
+
+```
+> ./env/bin/python utils/main.py bootstrap --instances dbs
+> ./env/bin/python utils/main.py bootstrap --instances all
+> ./env/bin/python utils/main.py bootstrap --instances dbs,key-store
+```
+
+You got it.
 
