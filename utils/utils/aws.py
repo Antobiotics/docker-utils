@@ -118,14 +118,31 @@ class AWSInstance(AWS):
         command = 'docker-machine rm %s' %(self.name)
         return execute(command)
 
-    def build(self, reset=True):
-        if reset and self.exists():
+    def create(self, options_string):
+        command = [
+            'docker-machine create',
+            options_string
+        ]
+        res = execute(' '.join(command))
+        l.INFO('Command Exited with result: %s'%(res))
+
+    @property
+    def steps_dict(self):
+        return {
+            'prepare': self.prepare,
+            'bootstrap': self.bootstrap,
+            'finalise': self.finalise
+        }
+
+    def build(self, options):
+        if options['reset'] and self.exists():
             res = self.remove()
             if not res:
                 raise RuntimeError('Unable to remove instance %s' %(self.name))
-        self.prepare()
-        self.bootstrap()
-        self.finalise()
+
+        for step in options['steps']:
+            l.INFO("Performing: %s" %(step))
+            self.steps_dict[step]()
 
     def prepare(self):
         raise RuntimeError("self.prepare must be implemented for AWSInstance")
@@ -144,22 +161,47 @@ class AWSGenericInstance(AWSInstance):
         options = [self.driver_options,
                    '--amazonec2-instance-type={instance_type}',
                    self.name]
+
         options_string = (
             ' '.join(options)
             .format(instance_type=self.instance_type)
         )
-
-        command = [
-            'docker-machine create',
-            options_string
-        ]
-        res = execute(' '.join(command))
-        l.INFO('Command Exited with result: %s'%(res))
+        self.create(options_string)
 
     def finalise(self):
         pass
 
-
 class KeyStore(AWSGenericInstance):
-    pass
+    def finalise(self):
+        command = [
+            'eval "$(docker-machine env %s)" &&',
+            'docker run',
+            '-d -p "8500:8500"',
+            '-h "consul" progrium/consul -server -bootstrap'
+        ]
+        execute(' '.join(command)%(self.name))
 
+class SwarmMaster(AWSGenericInstance):
+    def get_key_store(self):
+        key_store_desc = (
+            self.get_instance_ip_desc(self.cluster_prefix + '-key-store')
+        )
+        return key_store_desc['public']['ip']
+
+    def bootstrap(self):
+        options = [self.driver_options,
+                   '--amazonec2-instance-type={instance_type}',
+                   '--swarm',
+                   '--swarm-master',
+                   '--swarm-discovery="consul://{key_store}:8500"',
+                   '--engine-opt="cluster-store=consul://{key_store}:8500"',
+                   '--engine-opt="cluster-advertise=eth1:2376"',
+                   self.name]
+
+        options_string = (
+            ' '.join(options)
+            .format(instance_type=self.instance_type,
+                    key_store=self.get_key_store())
+        )
+        l.INFO(options_string)
+        self.create(options_string)
