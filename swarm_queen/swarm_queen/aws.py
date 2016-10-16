@@ -3,8 +3,8 @@ import ConfigParser
 
 from executor import execute
 
-import utils.logger as l
-import utils.configuration as g_conf
+import swarm_queen.logger as l
+import swarm_queen.configuration as g_conf
 
 class AWS(object):
     def __init__(self):

@@ -1,4 +1,7 @@
 setup: clean
+	python setup.py develop
+
+setup-dev: clean
 	virtualenv env
 	./env/bin/python setup.py develop
 

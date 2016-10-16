@@ -1,8 +1,8 @@
-from utils.aws import AWS
 from executor import execute
 
-import utils.logger as l
-from utils.configuration import CONFIG
+import swarm_queen.logger as l
+from swarm_queen.aws import AWS
+from swarm_queen.configuration import CONFIG
 
 DEFAULT_STEPS = [
     'prepare',

@@ -1,11 +1,11 @@
 import json
 import click
 
-import utils.logger as l
-import utils.aws as aws
-import utils.aws_instance as aws_instances
+import swarm_queen.logger as l
+import swarm_queen.aws as aws
+import swarm_queen.aws_instance as aws_instances
 
-from utils.configuration import CONFIG
+from swarm_queen.configuration import CONFIG
 
 def pretty_json(j):
     return json.dumps(j, sort_keys=True,
@@ -30,7 +30,8 @@ def bootstrap_member(desc):
     return instance_class(desc).build()
 
 @click.group()
-@click.option('--cfg', default='./cluster.json')
+@click.option('--cfg', default='./cluster.json',
+              help="Cluster configuration to use")
 def main(**kwargs):
     set_configuration(kwargs['cfg'])
 

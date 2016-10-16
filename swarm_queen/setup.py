@@ -9,9 +9,9 @@ except ImportError:
     pass
 
 setup(
-    name="docker-utils",
+    name="swarm-queen",
     version='1.0.0',
-    description="Simple Utilities for docker",
+    description="Bootstrap Swarm Cluster",
     author_email="albclus@gmail.com",
     url="https://github.com/Antobiotics/docker-utils",
     platforms="Posix; MacOS X; Windows",
@@ -22,7 +22,7 @@ setup(
         "Topic :: Software Development",
     ],
     packages=[
-        "utils"
+        "swarm_queen"
     ],
     install_requires=[
         "click",
