@@ -83,8 +83,12 @@ class AWSInstance(AWS):
         return self.get_instance(self.name) != []
 
     def remove(self):
-        command = 'docker-machine rm %s' %(self.name)
-        return execute(command)
+        for i in range(self.num_instances):
+            name = self.name
+            if self.num_instances != 1:
+                name = self.name + '-' + str(i)
+            command = 'docker-machine rm %s' %(name)
+            execute(command)
 
     def create(self, options_string):
         command = [

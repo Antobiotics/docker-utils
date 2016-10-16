@@ -59,6 +59,25 @@ def bootstrap(instances, reset, steps):
         bootstrap_member(member_desc)
 
 @main.command()
+@click.option('--instances', default='all',
+              help="CSV of instance names")
+def takedown(instances):
+    targeted_members = instances.split(',')
+    if instances == 'all':
+        targeted_members = [
+            m['name'] for m in CONFIG.get_members()
+        ]
+
+    for name in targeted_members:
+        member_desc = CONFIG.get_member(name)
+        l.INFO("Taking down %s" %(member_desc))
+        instance = aws_instances.AWSInstance(member_desc)
+        try:
+            instance.remove()
+        except Exception as e:
+            l.ERROR(e)
+
+@main.command()
 @click.argument('name')
 @click.option('--pretty', is_flag=True)
 def describe(name, pretty):
