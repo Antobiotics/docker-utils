@@ -15,6 +15,9 @@ setup(
     author_email="albclus@gmail.com",
     url="https://github.com/Antobiotics/docker-utils",
     platforms="Posix; MacOS X; Windows",
+    entry_points = {
+        "console_scripts": ['swarm_queen = swarm_queen.main:main']
+    },
     classifiers=[
         "Development Status :: 4 - Beta",
         "Environment :: Console",

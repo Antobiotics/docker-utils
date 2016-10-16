@@ -24,6 +24,19 @@ adds helpers to avoid typing long chains of arguments.
 At the moment, it is not very clever. It just automates some of painful stuffs,
 so you still need to get your hands dirty with docker first.
 
+The goal is to have a central command line tool to trigger most
+of the actions I perform on a cluster while developing.
+
+## TODO:
+
+- Read from `docker-compose.yml`.
+- Scale Command.
+- Refactor.
+- VirtualBox support.
+- Security groups.
+- Add Kafka/Spark/Zookeeper images to repo.
+- Script deployer.
+
 ## Requirements:
 
 You need to have installed:
@@ -132,3 +145,4 @@ Look at `cluster.json` to see how to configure it.
 ```
 > ./swarm_queen.py takedown --instances all
 ```
+
