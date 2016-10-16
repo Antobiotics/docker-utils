@@ -55,11 +55,19 @@ to see how to configure AWS for that project.
 > make setup-dev # for developement
 ```
 
+## Install:
+
+```
+> make install
+> which swarm_queen
+> swarm_queen --help
+```
+
 ## Usage:
 
 ```
-> ./swarm_queen.py --help
-Usage: swarm_queen.py [OPTIONS] COMMAND [ARGS]...
+> ./swarm_queen --help
+Usage: swarm_queen [OPTIONS] COMMAND [ARGS]...
 
 Options:
   --cfg TEXT  Cluster configuration to use
@@ -119,13 +127,13 @@ For example:
 ### Launching a cluster:
 
 ```
-> ./swarm_queen.py bootstrap --instances all
+> ./swarm_queen bootstrap --instances all
 ```
 
 You can specify the instances to launch with a comma separated list.
 
 ```
-> ./swarm_queen.py bootstrap --instances key-store,swarm-master
+> ./swarm_queen bootstrap --instances key-store,swarm-master
 ```
 
 If an instance already exists, the simplest way is to use `--reset` flag
@@ -136,13 +144,13 @@ Look at `cluster.json` to see how to configure it.
 ### Examining:
 
 ```
-> ./swarm_queen.py describe swarm-master --pretty
+> ./swarm_queen describe swarm-master --pretty
 ```
 
 
 ### Destroying a cluster:
 
 ```
-> ./swarm_queen.py takedown --instances all
+> ./swarm_queen takedown --instances all
 ```
 
