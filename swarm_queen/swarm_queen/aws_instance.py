@@ -79,15 +79,15 @@ class AWSInstance(AWS):
                     storage=self.root_size)
         )
 
-    def exists(self):
-        return self.get_instance(self.name) != []
+    def exists(self, name):
+        return self.get_instance(name) != []
 
     def remove(self):
         for i in range(self.num_instances):
             name = self.name
             if self.num_instances != 1:
                 name = self.name + '-' + str(i)
-            command = 'docker-machine rm %s' %(name)
+            command = 'docker-machine rm -f %s' %(name)
             execute(command)
 
     def create(self, options_string):
@@ -107,18 +107,22 @@ class AWSInstance(AWS):
         }
 
     def build(self):
+        # Note to self:
+        # Instead of that: Instantiate new instance objects
+        # and build them, this is ugly.
         for i in range(self.num_instances):
             name = self.name
             if self.num_instances != 1:
                 name = self.name + '-' + str(i)
-            if self.reset and self.exists():
-                res = self.remove()
-                if not res:
-                    raise RuntimeError('Unable to remove instance %s' %(name))
+            if self.reset and self.exists(name):
+                self.remove()
 
-            for step in self.steps:
-                l.INFO("Performing: %s" %(step))
-                self.steps_dict[step](name)
+            if not self.exists(name):
+                for step in self.steps:
+                    l.INFO("Performing: %s" %(step))
+                    self.steps_dict[step](name)
+            else:
+                l.WARN("Host %s already exists, skipping" %(name))
 
     def prepare(self, name):
         raise RuntimeError("self.prepare must be implemented for AWSInstance")

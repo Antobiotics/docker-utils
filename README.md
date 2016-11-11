@@ -29,6 +29,7 @@ of the actions I perform on a cluster while developing.
 
 ## TODO:
 
+- Add `cluster.json` validation.
 - Read from `docker-compose.yml`.
 - Scale Command.
 - Refactor.
