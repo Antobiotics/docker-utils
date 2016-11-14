@@ -1,0 +1,10 @@
+version: "2"
+
+services:
+    rstudio:
+        restart: always
+        image: rocker/rstudio
+        container_name: rstudio
+        environment:
+            - constraint:role==rstudio
+
