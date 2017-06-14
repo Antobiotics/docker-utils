@@ -1,0 +1,32 @@
+{
+    "name": "dev",
+    "aws": {
+        "region": "us-east-1",
+        "credentials_file": "/Users/gregoirelejay/.aws/credentials",
+        "profile": "default",
+        "vpc_id": "vpc-fa8b4e9f"
+    },
+    "members": [
+        {
+            "name": "key-store",
+            "instance_type": "t2.nano",
+            "role": "key-store",
+            "priority": 2000
+        },
+        {
+            "name": "swarm-master",
+            "instance_type": "t2.nano",
+            "role": "swarm-master",
+            "priority": 1000
+        },
+        {
+            "name": "rstudio",
+            "instance_type": "m3.xlarge",
+            "role": "rstudio",
+            "root-size": 100,
+            "priority": 100,
+            "num_instances": 1
+        }
+    ]
+}
+

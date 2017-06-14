@@ -1,0 +1,11 @@
+version: "3"
+services:
+    dl:
+        image: floydhub/dl-docker:cpu
+        ports:
+            - 8888:8888
+            - 6006:6006
+        deploy:
+            placement:
+                constraints: [node.role == dl]
+
